@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ใบงานคณิตคิดเลขเร็ว ป.3</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- CONTROL PANEL -->
+  <div class="panel">
+    <h1>เครื่องมือสร้างใบงานคณิตคิดเลขเร็ว ป.3</h1>
+    <p>บวก/ลบไม่เกิน 100,000 (มีการทดและยืมทุกข้อ) | คูณ/หารตามตารางสูตรคูณ | ความยากมาตรฐานคงที่</p>
+
+    <div class="btn-row">
+      <button class="btn btn-blue"  onclick="window.print()">🖨️ พิมพ์ใบงาน (A4)</button>
+      <button class="btn btn-green" id="btn-toggle" onclick="toggleAnswers()">👁️ แสดงเฉลย</button>
+      <button class="btn btn-amber" onclick="generateNewQuestions()">🔄 สุ่มโจทย์ใหม่</button>
+    </div>
+
+    <hr>
+
+    <div class="fields">
+      <div>
+        <label>หัวข้อใบงาน</label>
+        <input type="text" id="input-title"
+          value="แบบฝึกหัดคณิตคิดเลขเร็ว ชั้นประถมศึกษาปีที่ 3"
+          oninput="updateTitle()">
+      </div>
+      <div>
+        <label>เลขฉบับ</label>
+        <input type="text" id="input-edition" value="001"
+          maxlength="10" oninput="updateEdition()" placeholder="เช่น 001 หรือ ก">
+      </div>
+      <div>
+        <label>สีตัวเฉลย</label>
+        <select id="select-color" onchange="renderQuestions()">
+          <option value="ans-red">สีแดง (ชัดเจนในการตรวจ)</option>
+          <option value="ans-blue">สีน้ำเงิน</option>
+          <option value="ans-black">สีดำ</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="legend">
+      <b>มาตรฐานโจทย์:</b>
+      ข้อ 1–3 = บวกหลักแสน (มีการทดทุกข้อ, ผลลัพธ์ไม่เกิน 99,999) &nbsp;|&nbsp;
+      ข้อ 4–6 = ลบหลักแสน (มีการยืมทุกข้อ, ผลลัพธ์ ≥ 1,000) &nbsp;|&nbsp;
+      ข้อ 7–8 = คูณ (2 หลัก × 1 หลัก) &nbsp;|&nbsp;
+      ข้อ 9–10 = หาร (ตารางสูตรคูณ)
+    </div>
+  </div>
+
+  <!-- A4 PAGE -->
+  <div class="a4-page">
+    <div>
+      <!-- Top bar -->
+      <div class="a4-top-bar">
+        <div class="edition-box">
+          ฉบับที่
+          <input type="text" id="edition-display" value="001"
+            maxlength="10" oninput="syncEdition(this.value)">
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="a4-title">
+        <h2 id="sheet-title">แบบฝึกหัดคณิตคิดเลขเร็ว ชั้นประถมศึกษาปีที่ 3</h2>
+        <div class="subtitle">คะแนนเต็ม 10 คะแนน | เวลาทำ 10 นาที</div>
+      </div>
+
+      <!-- Student info -->
+      <div class="student-row">
+        <div class="student-field">
+          <span>ชื่อ-นามสกุล:</span>
+          <div class="dot-line"></div>
+        </div>
+        <div class="student-field">
+          <span>ชั้น: ป.3/</span>
+          <div class="dot-line"></div>
+        </div>
+        <div class="student-field">
+          <span>เลขที่:</span>
+          <div class="dot-line"></div>
+        </div>
+      </div>
+
+      <!-- Instruction + Score -->
+      <div class="info-row">
+        <div class="instruction">
+          <b>คำชี้แจง:</b><br>
+          ให้นักเรียนหาคำตอบของโจทย์ต่อไปนี้ให้ถูกต้องและรวดเร็วที่สุด
+        </div>
+        <div class="score-box">
+          <div class="score-label">คะแนนที่ได้</div>
+          <div class="score-val">....... / 10</div>
+        </div>
+      </div>
+
+      <!-- Questions -->
+      <div class="q-list" id="questions-grid"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="a4-footer">
+      <div><span class="dot-green"></span>คิดเลขเร็วเพื่อพัฒนาทักษะสมองและสมาธิ</div>
+      <div>ลงชื่อผู้ตรวจ: ...................................................... (ครู/ผู้ปกครอง)</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
