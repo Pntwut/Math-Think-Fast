@@ -8,7 +8,7 @@ body { font-family: 'Sarabun', sans-serif; background: #f1f5f9; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 .panel h1 { font-size: 18px; font-weight: 800; color: #1e293b; }
-.panel p  { font-size: 13px; color: #64748b; margin-top: 4px; }
+.panel p  { font-size: 13px; color: #64748b; margin-top: 8px; }
 .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
 .btn {
   display: flex; align-items: center; gap: 6px;
@@ -130,8 +130,8 @@ input:focus, select:focus { border-color: #2563eb; box-shadow: 0 0 0 2px #bfdbfe
 .q-list {
   flex: 1;
   display: flex; flex-direction: column;
-  gap: 5px;
-  margin-top: 4px;
+  gap: 12px;
+  margin-top: 8px;
   justify-content: center;
 }
 .q-row  { display: flex; align-items: center; white-space: nowrap; }
@@ -147,7 +147,7 @@ input:focus, select:focus { border-color: #2563eb; box-shadow: 0 0 0 2px #bfdbfe
 
 /* ---- FOOTER ---- */
 .half-footer {
-  border-top: 1px solid #d1d5db; padding-top: 4px; margin-top: 4px;
+  border-top: 1px solid #d1d5db; padding-top: 4px; margin-top: 8px;
   display: flex; justify-content: space-between; align-items: center;
   font-size: 8px; color: #6b7280;
 }
