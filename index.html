@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ใบงานคณิตคิดเลขเร็ว ป.3</title>
+  <title>ใบงานคณิตคิดเลขเร็ว ป.3 (2-up)</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -11,13 +11,13 @@
 
   <!-- CONTROL PANEL -->
   <div class="panel">
-    <h1>เครื่องมือสร้างใบงานคณิตคิดเลขเร็ว ป.3</h1>
-    <p>บวก/ลบไม่เกิน 100,000 (มีการทดและยืมทุกข้อ) | คูณ/หารตามตารางสูตรคูณ | ความยากมาตรฐานคงที่</p>
+    <h1>เครื่องมือสร้างใบงานคณิตคิดเลขเร็ว ป.3 (2 ชุดต่อแผ่น)</h1>
+    <p>พิมพ์ A4 แนวนอน → ตัดกลางแผ่น → ได้ใบงาน 2 ใบ ประหยัดกระดาษ 50%</p>
 
     <div class="btn-row">
-      <button class="btn btn-blue"  onclick="window.print()">🖨️ พิมพ์ใบงาน (A4)</button>
+      <button class="btn btn-blue"  onclick="window.print()">🖨️ พิมพ์ใบงาน (A4 แนวนอน)</button>
       <button class="btn btn-green" id="btn-toggle" onclick="toggleAnswers()">👁️ แสดงเฉลย</button>
-      <button class="btn btn-amber" onclick="generateNewQuestions()">🔄 สุ่มโจทย์ใหม่</button>
+      <button class="btn btn-amber" onclick="generateNewQuestions()">🔄 สุ่มโจทย์ใหม่ (2 ชุด)</button>
     </div>
 
     <hr>
@@ -30,13 +30,21 @@
           oninput="updateTitle()">
       </div>
       <div>
-        <label>เลขฉบับ</label>
-        <input type="text" id="input-edition" value="001"
-          maxlength="10" oninput="updateEdition()" placeholder="เช่น 001 หรือ ก">
+        <label>เลขฉบับ — ชุด A (ซ้าย)</label>
+        <input type="text" id="input-edition-a" value="001"
+          maxlength="10" oninput="updateEditionA()" placeholder="เช่น 001">
       </div>
       <div>
+        <label>เลขฉบับ — ชุด B (ขวา)</label>
+        <input type="text" id="input-edition-b" value="002"
+          maxlength="10" oninput="updateEditionB()" placeholder="เช่น 002">
+      </div>
+    </div>
+
+    <div style="margin-top:10px; display:flex; gap:12px; align-items:center;">
+      <div style="flex:1;">
         <label>สีตัวเฉลย</label>
-        <select id="select-color" onchange="renderQuestions()">
+        <select id="select-color" onchange="renderAll()">
           <option value="ans-red">สีแดง (ชัดเจนในการตรวจ)</option>
           <option value="ans-blue">สีน้ำเงิน</option>
           <option value="ans-black">สีดำ</option>
@@ -53,62 +61,94 @@
     </div>
   </div>
 
-  <!-- A4 PAGE -->
+  <!-- A4 LANDSCAPE PAGE -->
   <div class="a4-page">
-    <div>
-      <!-- Top bar -->
-      <div class="a4-top-bar">
-        <div class="edition-box">
-          ฉบับที่
-          <input type="text" id="edition-display" value="001"
-            maxlength="10" oninput="syncEdition(this.value)">
+
+    <!-- Cut line -->
+    <div class="cut-line"></div>
+    <div class="cut-icon">✂️</div>
+
+    <!-- ===== HALF A (ซ้าย) ===== -->
+    <div class="half">
+      <div>
+        <div class="half-top-bar">
+          <span class="set-label">ชุด A</span>
+          <div class="edition-box">
+            ฉบับที่
+            <input type="text" id="edition-a" value="001"
+              maxlength="10" oninput="syncEditionA(this.value)">
+          </div>
+        </div>
+
+        <div class="half-title">
+          <h2 id="title-a">แบบฝึกหัดคณิตคิดเลขเร็ว ชั้นประถมศึกษาปีที่ 3</h2>
+          <div class="subtitle">คะแนนเต็ม 10 คะแนน | เวลาทำ 10 นาที</div>
+        </div>
+
+        <div class="student-row">
+          <div class="student-field"><span>ชื่อ-นามสกุล:</span><div class="dot-line"></div></div>
+          <div class="student-field"><span>ชั้น: ป.3/</span><div class="dot-line"></div></div>
+          <div class="student-field"><span>เลขที่:</span><div class="dot-line"></div></div>
+        </div>
+
+        <div class="info-row">
+          <div class="instruction"><b>คำชี้แจง:</b><br>ให้นักเรียนหาคำตอบให้ถูกต้องและรวดเร็วที่สุด</div>
+          <div class="score-box">
+            <div class="score-label">คะแนนที่ได้</div>
+            <div class="score-val">...... / 10</div>
+          </div>
         </div>
       </div>
 
-      <!-- Title -->
-      <div class="a4-title">
-        <h2 id="sheet-title">แบบฝึกหัดคณิตคิดเลขเร็ว ชั้นประถมศึกษาปีที่ 3</h2>
-        <div class="subtitle">คะแนนเต็ม 10 คะแนน | เวลาทำ 10 นาที</div>
-      </div>
+      <div class="q-list" id="grid-a"></div>
 
-      <!-- Student info -->
-      <div class="student-row">
-        <div class="student-field">
-          <span>ชื่อ-นามสกุล:</span>
-          <div class="dot-line"></div>
-        </div>
-        <div class="student-field">
-          <span>ชั้น: ป.3/</span>
-          <div class="dot-line"></div>
-        </div>
-        <div class="student-field">
-          <span>เลขที่:</span>
-          <div class="dot-line"></div>
-        </div>
+      <div class="half-footer">
+        <div><span class="dot-green"></span>คิดเลขเร็วเพื่อพัฒนาทักษะสมองและสมาธิ</div>
+        <div>ลงชื่อผู้ตรวจ: ...................................... (ครู/ผู้ปกครอง)</div>
       </div>
-
-      <!-- Instruction + Score -->
-      <div class="info-row">
-        <div class="instruction">
-          <b>คำชี้แจง:</b><br>
-          ให้นักเรียนหาคำตอบของโจทย์ต่อไปนี้ให้ถูกต้องและรวดเร็วที่สุด
-        </div>
-        <div class="score-box">
-          <div class="score-label">คะแนนที่ได้</div>
-          <div class="score-val">....... / 10</div>
-        </div>
-      </div>
-
-      <!-- Questions -->
-      <div class="q-list" id="questions-grid"></div>
     </div>
 
-    <!-- Footer -->
-    <div class="a4-footer">
-      <div><span class="dot-green"></span>คิดเลขเร็วเพื่อพัฒนาทักษะสมองและสมาธิ</div>
-      <div>ลงชื่อผู้ตรวจ: ...................................................... (ครู/ผู้ปกครอง)</div>
+    <!-- ===== HALF B (ขวา) ===== -->
+    <div class="half">
+      <div>
+        <div class="half-top-bar">
+          <span class="set-label">ชุด B</span>
+          <div class="edition-box">
+            ฉบับที่
+            <input type="text" id="edition-b" value="002"
+              maxlength="10" oninput="syncEditionB(this.value)">
+          </div>
+        </div>
+
+        <div class="half-title">
+          <h2 id="title-b">แบบฝึกหัดคณิตคิดเลขเร็ว ชั้นประถมศึกษาปีที่ 3</h2>
+          <div class="subtitle">คะแนนเต็ม 10 คะแนน | เวลาทำ 10 นาที</div>
+        </div>
+
+        <div class="student-row">
+          <div class="student-field"><span>ชื่อ-นามสกุล:</span><div class="dot-line"></div></div>
+          <div class="student-field"><span>ชั้น: ป.3/</span><div class="dot-line"></div></div>
+          <div class="student-field"><span>เลขที่:</span><div class="dot-line"></div></div>
+        </div>
+
+        <div class="info-row">
+          <div class="instruction"><b>คำชี้แจง:</b><br>ให้นักเรียนหาคำตอบให้ถูกต้องและรวดเร็วที่สุด</div>
+          <div class="score-box">
+            <div class="score-label">คะแนนที่ได้</div>
+            <div class="score-val">...... / 10</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="q-list" id="grid-b"></div>
+
+      <div class="half-footer">
+        <div><span class="dot-green"></span>คิดเลขเร็วเพื่อพัฒนาทักษะสมองและสมาธิ</div>
+        <div>ลงชื่อผู้ตรวจ: ...................................... (ครู/ผู้ปกครอง)</div>
+      </div>
     </div>
-  </div>
+
+  </div><!-- end a4-page -->
 
   <script src="script.js"></script>
 </body>
