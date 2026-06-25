@@ -36,124 +36,92 @@ input:focus, select:focus { border-color: #2563eb; box-shadow: 0 0 0 2px #bfdbfe
 }
 .legend b { font-weight: 700; }
 
-/* ---- A4 PAGE (landscape for 2-up) ---- */
+/* ---- A4 PAGE (landscape 2-up) ---- */
 .a4-page {
-  width: 297mm;
-  height: 210mm;
-  background: #fff;
-  margin: 0 auto 32px;
+  width: 297mm; height: 210mm;
+  background: #fff; margin: 0 auto 32px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-  display: flex;
-  flex-direction: row;
-  position: relative;
+  display: flex; flex-direction: row; position: relative;
 }
 
-/* ---- CUT LINE in the middle ---- */
+/* ---- CUT LINE ---- */
 .cut-line {
-  position: absolute;
-  left: 50%;
-  top: 8mm;
-  bottom: 8mm;
-  width: 0;
-  border-left: 1.5px dashed #94a3b8;
-  z-index: 10;
+  position: absolute; left: 50%; top: 8mm; bottom: 8mm;
+  width: 0; border-left: 1.5px dashed #94a3b8; z-index: 10;
 }
 .cut-icon {
-  position: absolute;
-  left: 50%;
-  top: 3mm;
-  transform: translateX(-50%);
-  font-size: 14px;
-  color: #94a3b8;
-  z-index: 11;
-  background: #fff;
-  padding: 0 3px;
+  position: absolute; left: 50%; top: 3mm;
+  transform: translateX(-50%); font-size: 14px;
+  color: #94a3b8; z-index: 11; background: #fff; padding: 0 3px;
 }
 
 /* ---- HALF SHEET ---- */
 .half {
-  width: 50%;
-  height: 100%;
-  padding: 8mm 8mm 6mm 8mm;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  width: 50%; height: 100%;
+  padding: 7mm 8mm 6mm 8mm;
+  display: flex; flex-direction: column;
 }
 
+/* ---- HEADER ELEMENTS ---- */
 .half-top-bar {
-  display: flex; justify-content: space-between; align-items: center;
-  border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 4px;
-}
-.half-top-bar .set-label {
-  font-size: 9px; font-weight: 800; color: #1e293b; letter-spacing: 0.5px;
+  display: flex; justify-content: flex-end; align-items: center;
+  border-bottom: 1.5px solid #000; padding-bottom: 3px; margin-bottom: 5px;
 }
 .edition-box {
-  font-size: 9px; font-weight: 700; border: 1px solid #000;
-  padding: 1px 6px; border-radius: 3px; background: #f8fafc;
+  font-size: 10px; font-weight: 700; border: 1px solid #000;
+  padding: 2px 8px; border-radius: 3px; background: #f8fafc;
   display: flex; align-items: center; gap: 4px;
 }
 .edition-box input {
-  border: none; border-bottom: 1px solid #94a3b8; width: 36px;
-  font-size: 11px; font-weight: 700; text-align: center;
-  padding: 0 1px; outline: none; background: transparent;
+  border: none; border-bottom: 1px solid #94a3b8; width: 38px;
+  font-size: 12px; font-weight: 700; text-align: center;
+  padding: 0 2px; outline: none; background: transparent;
   font-family: 'Sarabun', sans-serif;
 }
 
-.half-title { text-align: center; margin: 2px 0; }
-.half-title h2 { font-size: 12px; font-weight: 800; }
-.half-title .subtitle { font-size: 9px; color: #4b5563; }
+.half-title { text-align: center; margin: 3px 0 2px; }
+.half-title h2 { font-size: 15px; font-weight: 800; }
+.half-title .subtitle { font-size: 11px; color: #4b5563; margin-top: 1px; }
 
 .student-row {
   display: grid; grid-template-columns: 5fr 2fr 2fr; gap: 4px;
-  font-size: 9px; margin: 4px 0;
-  padding-bottom: 4px; border-bottom: 1px dashed #9ca3af;
+  font-size: 11px; margin: 5px 0;
+  padding-bottom: 5px; border-bottom: 1px dashed #9ca3af;
 }
 .student-field { display: flex; align-items: flex-end; gap: 3px; }
 .student-field span:first-child { white-space: nowrap; }
-.dot-line { flex: 1; border-bottom: 1px dotted #6b7280; height: 14px; }
+.dot-line { flex: 1; border-bottom: 1px dotted #6b7280; height: 16px; }
 
 .info-row {
   display: flex; justify-content: space-between; align-items: center;
   background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px;
-  padding: 4px 8px; margin: 4px 0;
+  padding: 5px 10px; margin: 5px 0;
 }
-.instruction { font-size: 9px; color: #374151; }
+.instruction { font-size: 11px; color: #374151; }
 .instruction b { font-weight: 700; color: #111827; }
 .score-box {
-  border: 1.5px solid #000; border-radius: 5px; padding: 2px 6px;
-  text-align: center; width: 64px; background: #fff;
+  border: 1.5px solid #000; border-radius: 5px; padding: 2px 8px;
+  text-align: center; width: 72px; background: #fff; flex-shrink: 0;
 }
-.score-label { font-size: 8px; font-weight: 700; color: #6b7280; text-transform: uppercase; }
-.score-val   { font-size: 13px; font-weight: 900; color: #9ca3af; }
+.score-label { font-size: 9px; font-weight: 700; color: #6b7280; text-transform: uppercase; }
+.score-val   { font-size: 15px; font-weight: 900; color: #9ca3af; }
 
 /* ---- QUESTIONS ---- */
 .q-list {
   flex: 1;
   display: flex; flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
-  justify-content: center;
+  justify-content: space-evenly;   /* กระจายข้อให้เต็มพื้นที่ที่เหลือ */
+  padding: 4px 0;
 }
 .q-row  { display: flex; align-items: center; white-space: nowrap; }
-.q-num  { width: 20px; font-size: 10px; color: #9ca3af; font-weight: 400; }
-.q-expr { font-size: 13px; font-weight: 700; font-family: monospace; width: 130px; color: #1e293b; }
-.q-eq   { font-size: 13px; font-weight: 700; color: #4b5563; margin-right: 6px; }
-.q-ans-wrap { flex: 1; position: relative; height: 20px; }
-.q-ans-line { position: absolute; bottom: 2px; left: 0; right: 0; border-bottom: 1px dotted #9ca3af; }
+.q-num  { width: 26px; font-size: 13px; color: #9ca3af; font-weight: 500; flex-shrink: 0; }
+.q-expr { font-size: 17px; font-weight: 700; font-family: monospace; width: 155px; color: #1e293b; flex-shrink: 0; }
+.q-eq   { font-size: 17px; font-weight: 700; color: #4b5563; margin-right: 8px; flex-shrink: 0; }
+.q-ans-wrap { flex: 1; position: relative; height: 26px; }
+.q-ans-line { position: absolute; bottom: 2px; left: 0; right: 0; border-bottom: 1.5px dotted #9ca3af; }
 .q-ans-val  {
-  position: absolute; bottom: 3px; left: 8px;
-  font-size: 13px; font-weight: 700; transition: opacity 0.15s;
-}
-
-/* ---- FOOTER ---- */
-.half-footer {
-  border-top: 1px solid #d1d5db; padding-top: 4px; margin-top: 8px;
-  display: flex; justify-content: space-between; align-items: center;
-  font-size: 8px; color: #6b7280;
-}
-.dot-green {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #10b981; display: inline-block; margin-right: 4px;
+  position: absolute; bottom: 4px; left: 10px;
+  font-size: 17px; font-weight: 700; transition: opacity 0.15s;
 }
 
 /* ---- ANSWER COLORS ---- */
