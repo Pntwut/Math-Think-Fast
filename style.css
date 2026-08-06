@@ -115,7 +115,7 @@ input:focus, select:focus { border-color: #2563eb; box-shadow: 0 0 0 2px #bfdbfe
 }
 .q-row  { display: flex; align-items: center; white-space: nowrap; }
 .q-num  { width: 26px; font-size: 13px; color: #9ca3af; font-weight: 500; flex-shrink: 0; }
-.q-expr { font-size: 17px; font-weight: 700; font-family: monospace; width: 155px; color: #1e293b; flex-shrink: 0; }
+.q-expr { font-size: 17px; font-weight: 700; font-family: monospace; width: 190px; color: #1e293b; flex-shrink: 0; }
 .q-eq   { font-size: 17px; font-weight: 700; color: #4b5563; margin-right: 8px; flex-shrink: 0; }
 .q-ans-wrap { flex: 1; position: relative; height: 26px; }
 .q-ans-line { position: absolute; bottom: 2px; left: 0; right: 0; border-bottom: 1.5px dotted #9ca3af; }
