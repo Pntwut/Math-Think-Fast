@@ -1,6 +1,7 @@
 /* =========================================
    worksheet_math_p3 รอบ 2 — script.js
    บวก/ลบ หลักหมื่น | คูณ 2×2, 4×1 | หาร 2÷1, 3÷1
+   ระคน: 2 ขั้นตอน มี/ไม่มีวงเล็บคละกัน
    ========================================= */
 
 let showAnswers = false;
@@ -37,9 +38,8 @@ function fmt(n) { return n.toLocaleString('th-TH'); }
 function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-/* ---- Generators ---- */
+/* ---- Generators พื้นฐาน ---- */
 
-// บวก: หลักหมื่น + หลักหมื่น, ผลลัพธ์ไม่เกิน 99,999, มีการทด
 function genAdd(id) {
   let a, b, t = 0;
   do {
@@ -50,7 +50,6 @@ function genAdd(id) {
   return { id, text: `${fmt(a)} + ${fmt(b)}`, answer: a + b };
 }
 
-// ลบ: หลักหมื่น - หลักหมื่น, ผลลัพธ์ >= 1,000, มีการยืม
 function genSub(id) {
   let a, b, t = 0;
   do {
@@ -61,32 +60,119 @@ function genSub(id) {
   return { id, text: `${fmt(a)} - ${fmt(b)}`, answer: a - b };
 }
 
-// คูณ 2×2 หลัก (เช่น 23 × 14)
 function genMul2x2(id) {
   const a = rand(12, 99);
   const b = rand(12, 99);
   return { id, text: `${a} × ${b}`, answer: a * b };
 }
 
-// คูณ 4×1 หลัก (เช่น 1,234 × 6)
 function genMul4x1(id) {
   const a = rand(1000, 9999);
   const b = rand(2, 9);
   return { id, text: `${fmt(a)} × ${b}`, answer: a * b };
 }
 
-// หาร 2÷1 หลัก ลงตัว (เช่น 96 ÷ 8)
 function genDiv2x1(id) {
   const b = pick([2,3,4,5,6,7,8,9]);
   const q = pick([11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]);
   return { id, text: `${b*q} ÷ ${b}`, answer: q };
 }
 
-// หาร 3÷1 หลัก ลงตัว (เช่น 144 ÷ 6)
 function genDiv3x1(id) {
   const b = pick([2,3,4,5,6,7,8,9]);
   const q = pick([11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,30,40,50]);
   return { id, text: `${b*q} ÷ ${b}`, answer: q };
+}
+
+/* ---- Generator โจทย์ระคน 2 ขั้นตอน ---- */
+// รูปแบบที่ใช้ (คละวงเล็บ/ไม่มีวงเล็บ):
+//   แบบ A (มีวงเล็บ): (A × B) + C  |  (A × B) - C  |  (A ÷ B) + C  |  (A ÷ B) - C
+//   แบบ B (ไม่มีวงเล็บ): A + B × C  |  A - B × C  |  A + B ÷ C  |  A - B ÷ C
+//   ทั้งหมดคำนวณตามลำดับที่ถูกต้อง (คูณ/หารก่อน บวก/ลบทีหลัง)
+
+function genMixed(id) {
+  const useParens = Math.random() < 0.5;
+  const templates = useParens ? genMixedWithParens() : genMixedNoParens();
+  return { id, ...templates };
+}
+
+function genMixedWithParens() {
+  // เลือกรูปแบบ: (mul/div) op add/sub
+  const innerOp = pick(['mul', 'div']);
+  const outerOp = pick(['+', '-']);
+
+  let innerA, innerB, innerResult, text, answer;
+
+  if (innerOp === 'mul') {
+    // (A × B) ± C — ใช้คูณ 2×1 หลักให้ผลลัพธ์สมเหตุสมผล
+    innerA = rand(12, 99);
+    innerB = rand(2, 9);
+    innerResult = innerA * innerB;
+    const c = rand(10, 999);
+    if (outerOp === '+') {
+      text = `(${innerA} × ${innerB}) + ${fmt(c)}`;
+      answer = innerResult + c;
+    } else {
+      // ให้ผลลัพธ์ไม่ติดลบ
+      const safeC = Math.min(c, innerResult - 1);
+      text = `(${innerA} × ${innerB}) - ${fmt(safeC)}`;
+      answer = innerResult - safeC;
+    }
+  } else {
+    // (A ÷ B) ± C — ใช้หาร 2÷1 ลงตัว
+    innerB = pick([2,3,4,5,6,7,8,9]);
+    const q = pick([11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]);
+    innerA = innerB * q;
+    innerResult = q;
+    const c = rand(10, 500);
+    if (outerOp === '+') {
+      text = `(${innerA} ÷ ${innerB}) + ${fmt(c)}`;
+      answer = innerResult + c;
+    } else {
+      const safeC = Math.min(c, innerResult - 1);
+      text = `(${innerA} ÷ ${innerB}) - ${fmt(safeC)}`;
+      answer = innerResult - safeC;
+    }
+  }
+
+  return { text, answer };
+}
+
+function genMixedNoParens() {
+  // รูปแบบ A ± (B × C) หรือ A ± (B ÷ C) — คูณ/หารทำก่อน
+  const innerOp = pick(['mul', 'div']);
+  const outerOp = pick(['+', '-']);
+
+  let innerB, innerC, innerResult, a, text, answer;
+
+  if (innerOp === 'mul') {
+    innerB = rand(12, 50);
+    innerC = rand(2, 9);
+    innerResult = innerB * innerC;
+    a = rand(100, 9999);
+    if (outerOp === '+') {
+      text = `${fmt(a)} + ${innerB} × ${innerC}`;
+      answer = a + innerResult;
+    } else {
+      text = `${fmt(a)} - ${innerB} × ${innerC}`;
+      answer = a - innerResult;
+    }
+  } else {
+    innerC = pick([2,3,4,5,6,7,8,9]);
+    const q = pick([11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]);
+    innerB = innerC * q;
+    innerResult = q;
+    a = rand(100, 9999);
+    if (outerOp === '+') {
+      text = `${fmt(a)} + ${innerB} ÷ ${innerC}`;
+      answer = a + innerResult;
+    } else {
+      text = `${fmt(a)} - ${innerB} ÷ ${innerC}`;
+      answer = a - innerResult;
+    }
+  }
+
+  return { text, answer };
 }
 
 /* ---- Build question set by type ---- */
@@ -94,32 +180,32 @@ function generateSet(type) {
   const list = [];
 
   if (type === 'add') {
-    // 10 บวกล้วน
     for (let i = 1; i <= 10; i++) list.push(genAdd(i));
 
   } else if (type === 'sub') {
-    // 10 ลบล้วน
     for (let i = 1; i <= 10; i++) list.push(genSub(i));
 
   } else if (type === 'mul') {
-    // 5 ข้อ 2×2, 5 ข้อ 4×1
     for (let i = 1; i <= 5; i++) list.push(genMul2x2(i));
     for (let i = 6; i <= 10; i++) list.push(genMul4x1(i));
 
   } else if (type === 'div') {
-    // 5 ข้อ 2÷1, 5 ข้อ 3÷1
     for (let i = 1; i <= 5; i++) list.push(genDiv2x1(i));
     for (let i = 6; i <= 10; i++) list.push(genDiv3x1(i));
 
+  } else if (type === 'mixed') {
+    // ระคน: 10 ข้อ ล้วนๆ (มี/ไม่มีวงเล็บคละกัน)
+    for (let i = 1; i <= 10; i++) list.push(genMixed(i));
+
   } else {
-    // คละ: 2 บวก, 2 ลบ, 2 คูณ 2×2, 1 คูณ 4×1, 1 หาร 2÷1, 2 หาร 3÷1
+    // คละ: บวก 2, ลบ 2, คูณ 3, หาร 3
     list.push(genAdd(1));
     list.push(genAdd(2));
     list.push(genSub(3));
     list.push(genSub(4));
     list.push(genMul2x2(5));
-    list.push(genMul2x2(6));
-    list.push(genMul4x1(7));
+    list.push(genMul4x1(6));
+    list.push(genMul2x2(7));
     list.push(genDiv2x1(8));
     list.push(genDiv3x1(9));
     list.push(genDiv3x1(10));
@@ -172,7 +258,7 @@ function toggleAnswers() {
 function generateNewQuestions() {
   const type = document.getElementById('select-type').value;
   questionsA = generateSet(type);
-  questionsB = [...questionsA]; // 2 ฝั่งโจทย์เหมือนกัน
+  questionsB = [...questionsA];
   renderAll();
 }
 
