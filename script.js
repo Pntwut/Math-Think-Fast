@@ -1,13 +1,13 @@
 /* =========================================
-   worksheet_math_p3 — script.js
-   2-up landscape: ชุด A (ซ้าย) + ชุด B (ขวา)
+   worksheet_math_p3 รอบ 2 — script.js
+   บวก/ลบ หลักหมื่น | คูณ 2×2, 4×1 | หาร 2÷1, 3÷1
    ========================================= */
 
 let showAnswers = false;
-let questionsA = [];
-let questionsB = [];
+let questionsA  = [];
+let questionsB  = [];
 
-/* --- Utility --- */
+/* ---- Utility ---- */
 function digits(n) {
   const d = [];
   for (let i = 0; i < 6; i++) { d.push(n % 10); n = Math.floor(n / 10); }
@@ -34,56 +34,107 @@ function hasBorrow(a, b) {
   return found;
 }
 function fmt(n) { return n.toLocaleString('th-TH'); }
+function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-/* --- Generators --- */
-function genAddition(id) {
-  let a, b, tries = 0;
+/* ---- Generators ---- */
+
+// บวก: หลักหมื่น + หลักหมื่น, ผลลัพธ์ไม่เกิน 99,999, มีการทด
+function genAdd(id) {
+  let a, b, t = 0;
   do {
-    a = Math.floor(Math.random() * 39000) + 10000;
-    b = Math.floor(Math.random() * 39000) + 10000;
-    tries++;
-  } while ((a + b >= 100000 || !hasCarry(a, b)) && tries < 300);
-  return { id, text: fmt(a) + ' + ' + fmt(b), answer: a + b };
+    a = rand(10000, 49999);
+    b = rand(10000, 49999);
+    t++;
+  } while ((a + b > 99999 || !hasCarry(a, b)) && t < 300);
+  return { id, text: `${fmt(a)} + ${fmt(b)}`, answer: a + b };
 }
-function genSubtraction(id) {
-  let a, b, tries = 0;
+
+// ลบ: หลักหมื่น - หลักหมื่น, ผลลัพธ์ >= 1,000, มีการยืม
+function genSub(id) {
+  let a, b, t = 0;
   do {
-    a = Math.floor(Math.random() * 80000) + 10000;
-    const minB = 10000, maxB = Math.min(a - 1001, 89999);
-    if (maxB < minB) { tries++; continue; }
-    b = Math.floor(Math.random() * (maxB - minB + 1)) + minB;
-    tries++;
-  } while ((a - b < 1000 || !hasBorrow(a, b)) && tries < 300);
-  return { id, text: fmt(a) + ' - ' + fmt(b), answer: a - b };
+    a = rand(20000, 99999);
+    b = rand(10000, a - 1000);
+    t++;
+  } while ((a - b < 1000 || !hasBorrow(a, b)) && t < 300);
+  return { id, text: `${fmt(a)} - ${fmt(b)}`, answer: a - b };
 }
-function genMultiplication(id) {
-  const pool = [11,12,13,14,15,16,17,18,19,21,22,23,24,25,26,31,32,33,34,41,42,43,51,52,61,71,81];
-  const a = pool[Math.floor(Math.random() * pool.length)];
-  const b = Math.floor(Math.random() * 7) + 3;
-  return { id, text: a + ' × ' + b, answer: a * b };
+
+// คูณ 2×2 หลัก (เช่น 23 × 14)
+function genMul2x2(id) {
+  const a = rand(12, 99);
+  const b = rand(12, 99);
+  return { id, text: `${a} × ${b}`, answer: a * b };
 }
-function genDivision(id) {
-  const divs  = [2,3,4,5,6,7,8,9,10,11,12];
-  const quots = [3,4,5,6,7,8,9,10,11,12];
-  const b = divs[Math.floor(Math.random() * divs.length)];
-  const q = quots[Math.floor(Math.random() * quots.length)];
-  return { id, text: (b*q) + ' ÷ ' + b, answer: q };
+
+// คูณ 4×1 หลัก (เช่น 1,234 × 6)
+function genMul4x1(id) {
+  const a = rand(1000, 9999);
+  const b = rand(2, 9);
+  return { id, text: `${fmt(a)} × ${b}`, answer: a * b };
 }
-function generateSet() {
+
+// หาร 2÷1 หลัก ลงตัว (เช่น 96 ÷ 8)
+function genDiv2x1(id) {
+  const b = pick([2,3,4,5,6,7,8,9]);
+  const q = pick([11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]);
+  return { id, text: `${b*q} ÷ ${b}`, answer: q };
+}
+
+// หาร 3÷1 หลัก ลงตัว (เช่น 144 ÷ 6)
+function genDiv3x1(id) {
+  const b = pick([2,3,4,5,6,7,8,9]);
+  const q = pick([11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,30,40,50]);
+  return { id, text: `${b*q} ÷ ${b}`, answer: q };
+}
+
+/* ---- Build question set by type ---- */
+function generateSet(type) {
   const list = [];
-  for (let i = 1; i <= 3; i++) list.push(genAddition(i));
-  for (let i = 4; i <= 6; i++) list.push(genSubtraction(i));
-  for (let i = 7; i <= 8; i++) list.push(genMultiplication(i));
-  for (let i = 9; i <= 10; i++) list.push(genDivision(i));
+
+  if (type === 'add') {
+    // 10 บวกล้วน
+    for (let i = 1; i <= 10; i++) list.push(genAdd(i));
+
+  } else if (type === 'sub') {
+    // 10 ลบล้วน
+    for (let i = 1; i <= 10; i++) list.push(genSub(i));
+
+  } else if (type === 'mul') {
+    // 5 ข้อ 2×2, 5 ข้อ 4×1
+    for (let i = 1; i <= 5; i++) list.push(genMul2x2(i));
+    for (let i = 6; i <= 10; i++) list.push(genMul4x1(i));
+
+  } else if (type === 'div') {
+    // 5 ข้อ 2÷1, 5 ข้อ 3÷1
+    for (let i = 1; i <= 5; i++) list.push(genDiv2x1(i));
+    for (let i = 6; i <= 10; i++) list.push(genDiv3x1(i));
+
+  } else {
+    // คละ: 2 บวก, 2 ลบ, 2 คูณ 2×2, 1 คูณ 4×1, 1 หาร 2÷1, 2 หาร 3÷1
+    list.push(genAdd(1));
+    list.push(genAdd(2));
+    list.push(genSub(3));
+    list.push(genSub(4));
+    list.push(genMul2x2(5));
+    list.push(genMul2x2(6));
+    list.push(genMul4x1(7));
+    list.push(genDiv2x1(8));
+    list.push(genDiv3x1(9));
+    list.push(genDiv3x1(10));
+  }
+
   return list;
 }
 
-/* --- Render one half --- */
+/* ---- Render ---- */
 function renderHalf(questions, gridId) {
   const container = document.getElementById(gridId);
   container.innerHTML = '';
   const color   = document.getElementById('select-color').value;
   const opacity = showAnswers ? '1' : '0';
+
   questions.forEach(q => {
     const row = document.createElement('div');
     row.className = 'q-row';
@@ -104,7 +155,7 @@ function renderAll() {
   renderHalf(questionsB, 'grid-b');
 }
 
-/* --- UI Actions --- */
+/* ---- UI Actions ---- */
 function toggleAnswers() {
   showAnswers = !showAnswers;
   const btn = document.getElementById('btn-toggle');
@@ -119,8 +170,9 @@ function toggleAnswers() {
 }
 
 function generateNewQuestions() {
-  questionsA = generateSet();
-  questionsB = [...questionsA]; // ชุด B ใช้โจทย์เดียวกับชุด A
+  const type = document.getElementById('select-type').value;
+  questionsA = generateSet(type);
+  questionsB = [...questionsA]; // 2 ฝั่งโจทย์เหมือนกัน
   renderAll();
 }
 
