@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ใบงานคณิตคิดเลขเร็ว ป.3 (2-up)</title>
+  <title>ใบงานคณิตคิดเลขเร็ว ป.3 รอบ 2</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -11,20 +11,27 @@
 
   <!-- CONTROL PANEL -->
   <div class="panel">
-    <h1>เครื่องมือสร้างใบงานคณิตคิดเลขเร็ว ป.3 (2 ชุดต่อแผ่น)</h1>
+    <h1>เครื่องมือสร้างใบงานคณิตคิดเลขเร็ว ป.3 — รอบ 2</h1>
     <p>พิมพ์ A4 แนวนอน → ตัดกลางแผ่น → ได้ใบงาน 2 ใบ ประหยัดกระดาษ 50%</p>
+
     <div class="btn-row">
       <button class="btn btn-blue"  onclick="window.print()">🖨️ พิมพ์ใบงาน (A4 แนวนอน)</button>
       <button class="btn btn-green" id="btn-toggle" onclick="toggleAnswers()">👁️ แสดงเฉลย</button>
       <button class="btn btn-amber" onclick="generateNewQuestions()">🔄 สุ่มโจทย์ใหม่</button>
     </div>
+
     <hr>
+
     <div class="fields">
       <div>
-        <label>หัวข้อใบงาน</label>
-        <input type="text" id="input-title"
-          value="แบบฝึกหัดคณิตคิดเลขเร็ว ชั้นประถมศึกษาปีที่ 3"
-          oninput="updateTitle()">
+        <label>ประเภทโจทย์</label>
+        <select id="select-type" onchange="generateNewQuestions()">
+          <option value="mixed">คละทุกประเภท (บวก ลบ คูณ หาร)</option>
+          <option value="add">บวก (หลักหมื่น + หลักหมื่น)</option>
+          <option value="sub">ลบ (หลักหมื่น - หลักหมื่น)</option>
+          <option value="mul">คูณ (2×2 หลัก และ 4×1 หลัก)</option>
+          <option value="div">หาร (2÷1 หลัก และ 3÷1 หลัก ลงตัว)</option>
+        </select>
       </div>
       <div>
         <label>เลขฉบับ (ซ้าย)</label>
@@ -37,27 +44,36 @@
           maxlength="10" oninput="updateEditionB()" placeholder="เช่น 001">
       </div>
     </div>
-    <div style="margin-top:10px;">
-      <label>สีตัวเฉลย</label>
-      <select id="select-color" onchange="renderAll()" style="width:220px; border:1px solid #cbd5e1; border-radius:6px; padding:8px 10px; font-family:'Sarabun',sans-serif; font-size:14px;">
-        <option value="ans-red">สีแดง (ชัดเจนในการตรวจ)</option>
-        <option value="ans-blue">สีน้ำเงิน</option>
-        <option value="ans-black">สีดำ</option>
-      </select>
+
+    <div style="margin-top:12px; display:grid; grid-template-columns:2fr 1fr; gap:12px;">
+      <div>
+        <label>หัวข้อใบงาน</label>
+        <input type="text" id="input-title"
+          value="แบบฝึกหัดคณิตคิดเลขเร็ว ชั้นประถมศึกษาปีที่ 3"
+          oninput="updateTitle()">
+      </div>
+      <div>
+        <label>สีตัวเฉลย</label>
+        <select id="select-color" onchange="renderAll()">
+          <option value="ans-red">สีแดง</option>
+          <option value="ans-blue">สีน้ำเงิน</option>
+          <option value="ans-black">สีดำ</option>
+        </select>
+      </div>
     </div>
+
     <div class="legend">
-      <b>มาตรฐานโจทย์:</b>
-      ข้อ 1–3 = บวกหลักแสน (มีการทดทุกข้อ, ผลลัพธ์ไม่เกิน 99,999) &nbsp;|&nbsp;
-      ข้อ 4–6 = ลบหลักแสน (มีการยืมทุกข้อ, ผลลัพธ์ ≥ 1,000) &nbsp;|&nbsp;
-      ข้อ 7–8 = คูณ (2 หลัก × 1 หลัก) &nbsp;|&nbsp;
-      ข้อ 9–10 = หาร (ตารางสูตรคูณ)
+      <b>มาตรฐานโจทย์รอบ 2:</b>
+      บวก = หลักหมื่น + หลักหมื่น (มีการทดทุกข้อ) &nbsp;|&nbsp;
+      ลบ = หลักหมื่น - หลักหมื่น (มีการยืมทุกข้อ) &nbsp;|&nbsp;
+      คูณ = 2×2 หลัก และ 4×1 หลัก คละกัน &nbsp;|&nbsp;
+      หาร = 2÷1 หลัก และ 3÷1 หลัก ลงตัวทุกข้อ
     </div>
   </div>
 
   <!-- A4 LANDSCAPE PAGE -->
   <div class="a4-page">
 
-    <!-- Cut line -->
     <div class="cut-line"></div>
     <div class="cut-icon">✂️</div>
 
