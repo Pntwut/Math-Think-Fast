@@ -91,8 +91,8 @@ function genDiv3x1(id) {
 //   ทั้งหมดคำนวณตามลำดับที่ถูกต้อง (คูณ/หารก่อน บวก/ลบทีหลัง)
 
 function genMixed(id) {
-  const useParens = Math.random() < 0.5;
-  const templates = useParens ? genMixedWithParens() : genMixedNoParens();
+  // ไม่มีวงเล็บ: A ± B × C หรือ A ± B ÷ C (คูณ/หารก่อนเสมอ)
+  const templates = genMixedNoParens();
   return { id, ...templates };
 }
 
