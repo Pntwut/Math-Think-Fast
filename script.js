@@ -198,17 +198,17 @@ function generateSet(type) {
     for (let i = 1; i <= 10; i++) list.push(genMixed(i));
 
   } else {
-    // คละ: บวก 2, ลบ 2, คูณ 3, หาร 3
+    // คละ: บวก 2, ลบ 2, คูณ 2, หาร 2, ระคน 2
     list.push(genAdd(1));
     list.push(genAdd(2));
     list.push(genSub(3));
     list.push(genSub(4));
     list.push(genMul2x2(5));
     list.push(genMul4x1(6));
-    list.push(genMul2x2(7));
-    list.push(genDiv2x1(8));
-    list.push(genDiv3x1(9));
-    list.push(genDiv3x1(10));
+    list.push(genDiv2x1(7));
+    list.push(genDiv3x1(8));
+    list.push(genMixed(9));
+    list.push(genMixed(10));
   }
 
   return list;
